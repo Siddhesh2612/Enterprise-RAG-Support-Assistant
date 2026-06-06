@@ -9,3 +9,11 @@ app = FastAPI(
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+@app.get("/")
+def root():
+    return {
+        "message": "Enterprise RAG Support Assistant API is running",
+        "docs": "/docs",
+        "health": "/health"
+    }
