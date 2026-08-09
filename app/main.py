@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from app.rag.llm_service import generate_answer
 
-#Request and Response models for the /query endpoint
+#Request and Response models for the query endpoint
 class QueryRequest(BaseModel):
     question: str
 
