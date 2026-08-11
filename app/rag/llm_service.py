@@ -1,28 +1,36 @@
 import os
+from dotenv import load_dotenv
 import requests
-from dotenv import load_dotenv # Load environment variables from a .env file
 
 load_dotenv()
 
-# Constants for Ollama API configuration
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:1b")
+OLLAMA_BASE_URL = os.getenv(
+    "OLLAMA_BASE_URL",
+    "http://localhost:11434"
+)
 
+OLLAMA_MODEL = os.getenv(
+    "OLLAMA_MODEL",
+    "llama3.2:3b"
+)
 
-# Function to generate an answer from the Ollama model
-def generate_answer(question: str) -> str:
-    """
-    Sends a user question to a locally running Ollama model
-    and returns the generated answer.
-    """
-# Prepare the payload for the Ollama API request
+def generate_answer(question: str, context: str) -> str:
+
+    prompt = f"""
+You are an enterprise customer support assistant. Use ONLY the provided context to answer the user's question.
+If the answer cannot be found in the context, say: "I do not have enough information in the available knowledge base."
+
+Context:
+{context}
+
+User Question:
+{question}
+
+Answer:
+"""
     payload = {
         "model": OLLAMA_MODEL,
-        "prompt": (
-            "You are an enterprise customer support AI assistant. "
-            "Answer clearly and professionally.\n\n"
-            f"User question: {question}"
-        ),
+        "prompt": prompt,
         "stream": False
     }
 
@@ -35,4 +43,5 @@ def generate_answer(question: str) -> str:
     response.raise_for_status()
 
     data = response.json()
-    return data.get("response", "No response generated.")
+
+    return data["response"]
