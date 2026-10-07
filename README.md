@@ -1,80 +1,25 @@
 # Enterprise RAG Support Assistant
 
-A deployment-ready Retrieval-Augmented Generation (RAG) application that answers customer support queries using a structured knowledge base.
+A FastAPI prototype that answers customer-support questions from local Markdown knowledge-base files. It embeds document chunks with Sentence Transformers, retrieves them from ChromaDB, and asks a local Ollama model to answer using the retrieved context. The API returns the answer and source filenames.
 
-This project demonstrates production-oriented AI engineering skills including FastAPI APIs, vector search, Docker-based deployment, evaluation, and CI/CD readiness.
+## Current features
 
-## Problem
+- `POST /query` retrieves relevant chunks and generates a source-grounded answer.
+- `GET /health` provides a basic API health response.
+- `scripts/build_vector_store.py` indexes Markdown files from `data/raw/` into a local ChromaDB collection.
 
-Customer support teams often rely on large volumes of internal documentation (FAQs, policies, troubleshooting guides), making it difficult to quickly retrieve accurate answers.
+## Run locally
 
-Traditional keyword search systems fail to provide context-aware and reliable responses.
+1. Create and activate a Python virtual environment.
+2. Install dependencies: `pip install -r requirements.txt`.
+3. Start Ollama locally and make the configured model available. The default is `llama3.2:3b`; set `OLLAMA_BASE_URL` and `OLLAMA_MODEL` to change it.
+4. Build the index: `python scripts/build_vector_store.py`.
+5. Start the API: `uvicorn app.main:app --reload`.
 
-## Solution
+Open http://127.0.0.1:8000/docs for the interactive API. Send a JSON request such as `{"question":"How do I reset my password?"}` to `POST /query`.
 
-This project builds a Retrieval-Augmented Generation (RAG) system that:
+## Status and limits
 
-- Retrieves relevant documents from a knowledge base
-- Generates context-aware answers using LLMs
-- Returns source-backed responses to reduce hallucination
-- Exposes the system via a FastAPI backend for real-world usage
+This is a working prototype, not a production deployment. The `confidence` response field is currently a placeholder (`0.0`). Automated evaluation, CI, and container deployment are not implemented yet; the corresponding files are scaffolds. The included knowledge-base files are examples.
 
-## Features
-
-- FastAPI backend with REST endpoints
-- Document ingestion and vector-based retrieval (FAISS/Chroma)
-- Source-grounded answer generation
-- Dockerised application for reproducible deployment
-- Basic evaluation framework for retrieval and answer quality
-- Logging and error handling for reliability
-- CI pipeline with GitHub Actions (planned)
-
-## Tech Stack
-
-- Python
-- FastAPI
-- LangChain / LlamaIndex (for RAG pipeline)
-- FAISS / Chroma (vector database)
-- Hugging Face / OpenAI-compatible models
-- Docker
-- Pytest
-- GitHub Actions (CI)
-
-## Project Structure
-
-app/              → FastAPI app and RAG pipeline
-data/             → Knowledge base documents
-tests/            → Unit and API tests
-evaluation/       → RAG evaluation datasets
-docs/             → Documentation
-Dockerfile        → Container setup
-docker-compose.yml→ Local deployment
-
-## How to Run Locally
-
-### 1. Clone the repository
-
-git clone https://github.com/Siddhesh2612/Enterprise-RAG-Support-Assistant.git  
-cd Enterprise-RAG-Support-Assistant
-
-### 2. Create virtual environment
-
-python -m venv .venv  
-source .venv/bin/activate   # Mac/Linux  
-.venv\Scripts\activate      # Windows  
-
-### 3. Install dependencies
-
-pip install -r requirements.txt  
-
-### 4. Run the application
-
-uvicorn app.main:app --reload  
-
-### 5. Access API
-
-Docs: http://127.0.0.1:8000/docs  
-Health: http://127.0.0.1:8000/health
-
-
-
+**Stack:** Python, FastAPI, ChromaDB, Sentence Transformers, Ollama.
