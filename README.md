@@ -20,6 +20,6 @@ Open http://127.0.0.1:8000/docs for the interactive API. Send a JSON request suc
 
 ## Status and limits
 
-This is a working prototype, not a production deployment. The `confidence` response field is currently a placeholder (`0.0`). Automated evaluation, CI, and container deployment are not implemented yet; the corresponding files are scaffolds. The included knowledge-base files are examples.
+This is a prototype, not a production deployment. The `confidence` response field is currently a placeholder (`0.0`). Automated evaluation, CI, and container deployment are not implemented yet; the corresponding files are scaffolds. The included knowledge-base files are examples.
 
 **Stack:** Python, FastAPI, ChromaDB, Sentence Transformers, Ollama.
